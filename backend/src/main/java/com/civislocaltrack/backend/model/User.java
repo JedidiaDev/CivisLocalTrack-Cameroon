@@ -20,43 +20,39 @@ public class User {
     private Role role;
 
     //Getters and Setters
-    public Long getId_user() {
+    public Long getIdUser() {
         return id_user;
     }
 
-    public void setId_user(Long id_user) {
-        this.id_user = id_user;
-    }
-
-    public String getName_user() {
+    public String getNameUser() {
         return name_user;
     }
 
-    public void setName_user(String name_user) {
+    public void setNameUser(String name_user) {
         this.name_user = name_user;
     }
 
-    public String getMail_user() {
+    public String getMailUser() {
         return mail_user;
     }
 
-    public void setMail_user(String mail_user) {
+    public void setMailUser(String mail_user) {
         this.mail_user = mail_user;
     }
 
-    public int getTel_user() {
+    public int getTelUser() {
         return tel_user;
     }
 
-    public void setTel_user(int tel_user) {
+    public void setTelUser(int tel_user) {
         this.tel_user = tel_user;
     }
 
-    public String getPassword_user() {
+    public String getPasswordUser() {
         return password_user;
     }
 
-    public void setPassword_user(String password_user) {
+    public void setPasswordUser(String password_user) {
         this.password_user = password_user;
     }
 
