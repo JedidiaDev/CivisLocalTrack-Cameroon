@@ -1,5 +1,5 @@
 package com.civislocaltrack.backend.model;
 
-public class BudgetDocument {
+public interface IBudgetaryDocument {
     
 }
