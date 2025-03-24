@@ -3,8 +3,10 @@ package com.civislocaltrack.backend.model;
 import java.time.LocalDate;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.ForeignKey;
@@ -21,7 +23,7 @@ public abstract class BudgetaryDocument implements IBudgetaryDocument{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_document")
+    @Column(name = "id_document", nullable = false, unique = true, updatable = false)
     private Long idDocument;
 
     @Column(name = "intutile_document")
@@ -34,7 +36,7 @@ public abstract class BudgetaryDocument implements IBudgetaryDocument{
     protected LocalDate publicationDate;
 
     @Column(name = "year")
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "id_exercise", foreignKey = @ForeignKey(name = "fk_document_exercise"))
     private BudgetExercise year;
     

@@ -19,7 +19,7 @@ public class BudgetExercise{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_exercise")
+    @Column(name = "id_exercise", nullable = false, unique = true, updatable = false)
     private Long id_exercise;
 
     @Column(name = "year")

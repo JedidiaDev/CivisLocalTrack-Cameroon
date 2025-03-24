@@ -59,22 +59,22 @@ public class Council {
     // @JoinColumn(name = "management_account_id")
     // private ManagementAccount managementAccount;
 
-    public Council() {
-    }
+    // public Council() {
+    // }
 
-    public Council(String name, String address, String phone, String email, String website, String description, String logo, TypeDocument typeDocument, Budget budget, AdminAccount adminAccount, ManagementAccount managementAccount) {
-        this.name = name;
-        this.address = address;
-        this.phone = phone;
-        this.email = email;
-        this.website = website;
-        this.description = description;
-        this.logo = logo;
+    // public Council(String name, String address, String phone, String email, String website, String description, String logo, TypeDocument typeDocument, Budget budget, AdminAccount adminAccount, ManagementAccount managementAccount) {
+    //     this.name = name;
+    //     this.address = address;
+    //     this.phone = phone;
+    //     this.email = email;
+    //     this.website = website;
+    //     this.description = description;
+    //     this.logo = logo;
         // this.typeDocument = typeDocument;
         // this.budget = budget;
         // this.adminAccount = adminAccount;
         // this.managementAccount = managementAccount;
-    }
+    // }
 
     
 }
