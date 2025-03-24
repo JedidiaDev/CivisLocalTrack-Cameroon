@@ -16,6 +16,10 @@ public class Role {
 
     private String libelleRole;
 
+    //Getters and setters
+    public Long getId() {
+        return id;
+    }
     public void setLibelleRole(String libelleRole) {
         this.libelleRole = libelleRole;
     }
