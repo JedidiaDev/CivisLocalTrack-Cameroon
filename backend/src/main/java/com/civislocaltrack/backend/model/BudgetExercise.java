@@ -22,11 +22,12 @@ public class BudgetExercise{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_exercise")
-    private Long id_exercise;
+    private Long id;
 
     @Column(name = "year")
     @Temporal(TemporalType.DATE)
     private Date dateBudgetExercise;
+    
     private List<Date> allExercises = new ArrayList<>();
 
     private BudgetExercise() {
@@ -41,7 +42,7 @@ public class BudgetExercise{
     }
 
     public Long getId() {
-        return id_exercise;
+        return id;
     }
     public Date getDateBudgetExercise() {
         return dateBudgetExercise;

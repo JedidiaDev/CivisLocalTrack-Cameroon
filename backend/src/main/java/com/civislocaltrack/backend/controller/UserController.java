@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-// @RequestMapping("/api/users")
+@RequestMapping("/api/users")
 public class UserController {
 
     @Autowired
@@ -18,8 +18,14 @@ public class UserController {
     }
 
     @GetMapping("/login")
-    public User loginUser(@RequestParam String email, @RequestParam String password) {
-        return userService.loginUser(email, password);
+    public String loginUser(@RequestParam String email, @RequestParam String password) {
+        // return userService.loginUser(email, password);
+        User user = userService.loginUser(email, password);
+        if (user != null) {
+            return "Connexion réussie !";
+        } else {
+            return "Email ou mot de passe incorrect.";
+        }
     }
 
     @GetMapping("/users")
