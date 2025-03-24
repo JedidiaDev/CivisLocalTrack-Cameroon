@@ -3,12 +3,7 @@ package com.civislocaltrack.backend.model;
 import org.springframework.stereotype.Component;
 import lombok.Data;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Table;
-import jakarta.persistence.Id;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Column;
+import jakarta.persistence.*;
 
 
 @Entity
@@ -24,35 +19,6 @@ public class BudgetExercise{
 
     @Column(name = "year")
     @Temporal(TemporalType.DATE)
-    private Date dateBudgetExercise;
-    private List<Date> allExercises = new ArrayList<>();
+    private Integer year;
 
-    private BudgetExercise() {
-        // private constructor to avoid instantiation from outside the class
-    }
-
-    public static synchronized BudgetExercise getInstance() {
-        if (budgetExercise == null) 
-            budgetExercise = new BudgetExercise();
-        
-        return budgetExercise;
-    }
-
-    public Long getId() {
-        return id_exercise;
-    }
-    public Date getDateBudgetExercise() {
-        return dateBudgetExercise;
-    }
-
-    public void addExercise() {
-        allExercises.add(dateBudgetExercise);
-    }
-
-    public Date getLatestDate() {
-        if (!allExercises.isEmpty()) {
-            return allExercises.get(allExercises.size() - 1);
-        }
-        return null;
-    }
 }
