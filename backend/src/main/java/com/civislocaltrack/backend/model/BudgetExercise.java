@@ -1,6 +1,7 @@
 package com.civislocaltrack.backend.model;
 
-import org.springframework.stereotype.Component;
+import java.util.List;
+
 import lombok.Data;
 
 import jakarta.persistence.*;
@@ -8,7 +9,6 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "budget_exercise")
-@Component
 @Data
 public class BudgetExercise{
 
@@ -18,7 +18,11 @@ public class BudgetExercise{
     private Long id;
 
     @Column(name = "year")
-    @Temporal(TemporalType.DATE)
     private Integer year;
 
-}
+    @OneToMany(mappedBy = "year", orphanRemoval = true, cascade = CascadeType.ALL)
+    private List<BudgetaryDocument> budgetaryDocuments;
+
+
+
+}    

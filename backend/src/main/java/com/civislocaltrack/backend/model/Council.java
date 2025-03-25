@@ -1,5 +1,7 @@
 package com.civislocaltrack.backend.model;
 
+import java.util.List;
+
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -40,24 +42,12 @@ public class Council {
 
     private float density;
 
-    @Enumerated(EnumType.STRING)
+    @ManyToOne
+    @JoinColumn(name = "id_council_type", foreignKey = @ForeignKey(name = "fk_council_council_type"))
     private CouncilType councilType;
 
-    // @ManyToOne
-    // @JoinColumn(name = "type_document_id")
-    // private TypeDocument typeDocument;
-
-    // @ManyToOne
-    // @JoinColumn(name = "budget_id")
-    // private Budget budget;
-
-    // @ManyToOne
-    // @JoinColumn(name = "admin_account_id")
-    // private AdminAccount adminAccount;
-
-    // @ManyToOne
-    // @JoinColumn(name = "management_account_id")
-    // private ManagementAccount managementAccount;
+    @OneToMany(mappedBy = "council", orphanRemoval = true, cascade = CascadeType.ALL)
+    private List<BudgetaryDocument> budgetaryDocuments;
 
     // public Council() {
     // }
