@@ -1,7 +1,5 @@
 package com.civislocaltrack.backend.model;
 
-import java.util.List;
-
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -28,5 +26,9 @@ public class ManagementAccount extends BudgetaryDocument {
 
     @Column(name = "settlement_made")
     private double settlementMade;
+
+    @ManyToOne
+    @JoinColumn(name = "id_nomenclature", foreignKey = @ForeignKey(name = "fk_management_account_nomenclature"))
+    private Nomenclature nomenclature;
     
 }

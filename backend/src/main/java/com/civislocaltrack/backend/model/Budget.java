@@ -1,9 +1,7 @@
 package com.civislocaltrack.backend.model;
 
-import java.lang.reflect.Type;
 import java.util.List;
 
-import org.springframework.stereotype.Component;
 
 import jakarta.persistence.*;
 import lombok.Data;
@@ -21,7 +19,7 @@ public class Budget extends BudgetaryDocument{
 
     @ManyToOne
     @JoinColumn(name = "id_nomenclature", foreignKey = @ForeignKey(name = "fk_budget_nomenclature"))
-    private Nomenclature nomenclatureAdopted;
+    private Nomenclature nomenclature;
 
     @OneToMany(mappedBy = "budget", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TypeDocument> typeDocument;

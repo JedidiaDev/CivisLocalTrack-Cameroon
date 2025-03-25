@@ -22,9 +22,9 @@ public class TypeDocument {
     @JoinColumn(name = "budget_id")
     private Budget budget;
 
-    // @ManyToOne
-    // @JoinColumn(name = "admin_account_id")
-    // private AdminAccount adminAccount;
+    @ManyToOne
+    @JoinColumn(name = "admin_account_id")
+    private AdminAccount adminAccount;
 
     @OneToMany(mappedBy = "typeDocument", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<Nature> natures;
