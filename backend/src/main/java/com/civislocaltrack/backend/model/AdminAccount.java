@@ -12,10 +12,8 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ForeignKey;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -27,6 +25,21 @@ import lombok.EqualsAndHashCode;
 @DiscriminatorValue("COMPTE_ADMIN")
 public class AdminAccount extends BudgetaryDocument{
     
-    
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_admin_account", nullable = false, unique = true, updatable = false)
+    private Long idAdminAccount;
+
+    @Column(name = "total_expenditure")
+    private double totalExpenditure;
+
+    @Column(name = "total_revenue")
+    private double totalRevenue;
+
+    @Column(name = "allocated_amount")
+    private double allocatedAmount;
+
+    @OneToMany(mappedBy = "admin_account" ,cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<TypeDocument> typeDocument;
 
 }

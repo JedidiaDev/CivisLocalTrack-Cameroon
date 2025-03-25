@@ -28,4 +28,17 @@ public class Nomenclature {
     @Column(name = "status_nomenclature")
     private String status;
     
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_nomenclature", nullable = false, unique = true, updatable = false)
+    private int idNomenclature;
+
+    @Column(name = "nomenclature_name")
+    private String nomenclatureName;
+
+    @OneToMany(mappedBy = "nomenclature" ,cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<Budget> budgets;
+
+    @OneToMany(mappedBy = "nomenclature" ,cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<ManagementAccount> managementAccounts;
 }
