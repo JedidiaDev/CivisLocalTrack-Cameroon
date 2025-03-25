@@ -11,40 +11,33 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ForeignKey;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
 import lombok.Data;
 
 @Component
 @Entity
-@Table(name = "management_account")
+@Table(name = "admin_account")
 @Data
+@PrimaryKeyJoinColumn(name = "id_budgetary_document")
 public class AdminAccount extends BudgetaryDocument{
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_management_account", nullable = false, unique = true, updatable = false)
-    private Long idManagementAccount;
+    @Column(name = "id_admin_account", nullable = false, unique = true, updatable = false)
+    private Long idAdminAccount;
 
-    @Column(name = "initial_budget")
-    private double initialBudget;
+    @Column(name = "total_expenditure")
+    private double totalExpenditure;
 
-    @Column(name = "forecast_budget")
-    private double forecastBudget;
+    @Column(name = "total_revenue")
+    private double totalRevenue;
 
-    @Column(name = "special_authorization")
-    private double specialAuthorization;
+    @Column(name = "allocated_amount")
+    private double allocatedAmount;
 
-    @Column(name = "payment")
-    private double payment;
-
-    @Column(name = "settlement_made")
-    private double settlementMade;
-
-    @OneToMany(mappedBy = "management_account" ,cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "admin_account" ,cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<TypeDocument> typeDocument;
 
 }
