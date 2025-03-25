@@ -5,22 +5,12 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.DiscriminatorValue;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Entity
 @Table(name = "budget")
-@PrimaryKeyJoinColumn(name = "id_budgetary_document", referencedColumnName = "id_budgetary_document")
 @Data
 @EqualsAndHashCode(callSuper = true)
 @DiscriminatorValue("BUDGET")

@@ -1,5 +1,7 @@
 package com.civislocaltrack.backend.model;
 
+import java.util.List;
+
 import jakarta.persistence.*;
 import lombok.Data;
 
