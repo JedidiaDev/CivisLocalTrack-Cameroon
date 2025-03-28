@@ -14,7 +14,9 @@ public class FileException extends RuntimeException {
         UPLOAD_FAILED,
         DELETE_FAILED,
         DOWNLOAD_FAILED,
-        CONTENT_FILE_NOT_AUTHORIZED
+        CONTENT_FILE_NOT_AUTHORIZED,
+        CORRUPTED_FILE,
+        EMPTY_FILE
     }
 
     private FileErrorCode errorCodeFile;
