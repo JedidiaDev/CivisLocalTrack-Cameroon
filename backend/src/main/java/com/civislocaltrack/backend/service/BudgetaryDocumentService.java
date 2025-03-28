@@ -21,6 +21,12 @@ import io.minio.MakeBucketArgs;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
 import jakarta.transaction.Transactional;
+import java.io.IOException;
+import java.io.InputStream;
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
 
 @Service
 public class BudgetaryDocumentService {
@@ -81,7 +87,7 @@ public class BudgetaryDocumentService {
         // Vérification du type MIME
         String contentType = fichier.getContentType();
         if (contentType == null || !mimeTypesAutorises.contains(contentType)) {
-            throw new FileException("Seuls les fichiers PDF, XLS/XLSX et CSV sont acceptés. Type reçu : " + contentType, FileException.FileErrorCode.CONTENT_FILE_NOT_AUTHORIZED); 
+            throw new FileException("Seuls les fichiers PDF, XLS/XLSX et CSV sont acceptés. Type reçu : " + contentType, FileException.FileErrorCode.CONTENT_FILE_NOT_AUTHORIZED);
         }
 
         // Vérification de l'extension pour double sécurité
@@ -142,5 +148,5 @@ public class BudgetaryDocumentService {
 
         // === 5. Sauvegarde en base ===
         return budgetaryDocumentRepository.save(budgetaryDocument);
-    }    
+    }
 }

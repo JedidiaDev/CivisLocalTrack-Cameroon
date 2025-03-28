@@ -88,9 +88,9 @@
 			<optional>true</optional>
 		</dependency>
 		<dependency>
-			<groupId>com.amazonaws</groupId>
-			<artifactId>aws-java-sdk-s3</artifactId>
-			<version>1.12.781</version>
+			<groupId>io.minio</groupId>
+			<artifactId>minio</artifactId>
+			<version>8.5.17</version>
 		</dependency>
 		<dependency>
 			<groupId>org.postgresql</groupId>
