@@ -25,5 +25,7 @@ public class MinioConfig {
                 .credentials(accessKey, secretKey)
                 .build();
     }
+
+    // minioClient() est un bean Spring qui crée une instance de MinioClient
     
 }
