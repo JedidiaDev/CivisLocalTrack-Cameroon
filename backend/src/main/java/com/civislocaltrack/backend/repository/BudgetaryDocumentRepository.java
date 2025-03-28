@@ -12,5 +12,6 @@ import com.civislocaltrack.backend.model.BudgetaryDocument.CategoryDocument;
 @Repository
 public interface BudgetaryDocumentRepository extends JpaRepository<BudgetaryDocument, Long> {
     List<BudgetaryDocument> findByCategoryDocument(CategoryDocument category);
+    Optional<BudgetaryDocument> findByOriginalName(String originalName);
     
 }
