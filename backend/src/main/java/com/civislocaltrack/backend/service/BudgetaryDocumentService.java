@@ -1,7 +1,12 @@
 package com.civislocaltrack.backend.service;
 
-import io.minio.MinioClient;
-import io.minio.PutObjectArgs;
+import java.io.IOException;
+import java.io.InputStream;
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -11,6 +16,10 @@ import com.civislocaltrack.backend.model.BudgetaryDocument;
 import com.civislocaltrack.backend.model.BudgetaryDocument.CategoryDocument;
 import com.civislocaltrack.backend.repository.BudgetaryDocumentRepository;
 
+import io.minio.BucketExistsArgs;
+import io.minio.MakeBucketArgs;
+import io.minio.MinioClient;
+import io.minio.PutObjectArgs;
 import jakarta.transaction.Transactional;
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,16 +32,39 @@ import java.util.UUID;
 public class BudgetaryDocumentService {
 
     @Autowired
-    private BudgetaryDocumentRepository budgetaryDocumentRepository;
+    private MinioClient minioClient; // Commenté car non utilisé dans cette version
 
-    @Value("${minio.bucketName}")
+    @Value("${minio.bucket-name}")
     private String bucketName;
 
-    @Value("${minio.endpoint}")
-    private String endpoint;
-
     @Autowired
-    private MinioClient minioClient;
+    private BudgetaryDocumentRepository budgetaryDocumentRepository;
+
+    // private final Path rootLocation = Paths.get("uploads");
+
+    // public BudgetaryDocumentService() {
+    //     initStorageDirectory();
+    // }
+
+
+    // private void initStorageDirectory() {
+    //     try {
+    //         Files.createDirectories(rootLocation);
+    //     } catch (IOException e) {
+    //         throw new RuntimeException("Impossible de créer le dossier de stockage", e);
+    //     }
+    // }
+    // private void initStorageDirectory() {
+    //     try {
+    //         Files.createDirectories(rootLocation);
+    //     } catch (IOException e) {
+    //         throw new RuntimeException("Impossible de créer le dossier de stockage", e);
+    //     }
+    // }
+
+    // // public BudgetaryDocument uploadBudgetaryDocument(BudgetaryDocument budgetaryDocument) {
+    // //     return budgetaryDocumentRepository.save(budgetaryDocument);
+    // // }
 
     @Transactional
     public BudgetaryDocument uploadBudgetaryDocument(BudgetaryDocument budgetaryDocument, MultipartFile fichier, CategoryDocument categoryDocument)
@@ -69,27 +101,50 @@ public class BudgetaryDocumentService {
         // === 2. Génération d'un nom de fichier unique ===
         String nomUnique = UUID.randomUUID() + "." + extension; // Ex: "a3b8f2e1.xlsx"
 
-        // === 3. Upload vers MinIO ===
-        try (InputStream fileStream = fichier.getInputStream()) {
-            PutObjectArgs putObjectArgs = PutObjectArgs.builder()
-                    .bucket(bucketName)
-                    .object(nomUnique)
-                    .stream(fileStream, fichier.getSize(), -1)
-                    .contentType(contentType)
-                    .build();
-            minioClient.putObject(putObjectArgs);
-        } catch (Exception e) {
-            throw new IOException("Échec de l'enregistrement du fichier dans MinIO.", e);
-        }
+            // === 3. Sauvegarde sécurisée du fichier ===
+            // if (!Files.exists(rootLocation)) {
+            //     Files.createDirectories(rootLocation);
+            // }
 
-        // === 4. Mise à jour des métadonnées ===
-        budgetaryDocument.setIntitule(nomUnique);
-        budgetaryDocument.setOriginalName(nomOriginal);
-        budgetaryDocument.setUrl(endpoint + "/" + bucketName + "/" + nomUnique); // URL du fichier dans MinIO
-        budgetaryDocument.setType(contentType); // Stocke le type MIME
-        budgetaryDocument.setCategoryDocument(categoryDocument);
-        budgetaryDocument.setSize(fichier.getSize());
-        budgetaryDocument.setUploadDate(LocalDateTime.now());
+            // === 3. Téléverser le fichier vers Minio ===
+            try (InputStream inputStream = fichier.getInputStream()) {
+                // Vérifier si le bucket existe, sinon le créer
+                boolean isExist = minioClient.bucketExists(BucketExistsArgs.builder().bucket(bucketName).build());
+                if (!isExist) {
+                    // Créer le bucket s'il n'existe pas
+                    minioClient.makeBucket(MakeBucketArgs.builder().bucket(bucketName).build());
+                }
+
+                // Téléverser le fichier dans MinIO
+                minioClient.putObject(
+                    PutObjectArgs.builder()
+                        .bucket(bucketName)
+                        .object(nomUnique)
+                        .stream(inputStream, fichier.getSize(), -1)
+                        .contentType(contentType)
+                        .build()
+                );
+            } catch (Exception e) {
+                // Gérer les exceptions de téléversement
+                throw new IOException("Échec du téléversement du fichier vers MinIO.", e);
+                // throw new Exception("Échec du téléversement du fichier vers MinIO.", e);
+            }
+
+            // // Path cheminFichier = rootLocation.resolve(nomUnique);
+            // try {
+            //     Files.copy(fichier.getInputStream(), cheminFichier, StandardCopyOption.REPLACE_EXISTING);
+            // } catch (IOException e) {
+            //     throw new IOException("Échec de l'enregistrement du fichier.", e);
+            // }
+
+            // === 4. Mise à jour des métadonnées ===
+            budgetaryDocument.setIntitule(nomUnique);
+            budgetaryDocument.setOriginalName(nomOriginal);
+            budgetaryDocument.setUrl("http://localhost:8900/" + bucketName + "/" + nomUnique); // URL d'accès au fichier
+            budgetaryDocument.setType(contentType); // Stocke le type MIME
+            budgetaryDocument.setCategoryDocument(categoryDocument);
+            budgetaryDocument.setSize(fichier.getSize());
+            budgetaryDocument.setUploadDate(LocalDateTime.now());
 
         // === 5. Sauvegarde en base ===
         return budgetaryDocumentRepository.save(budgetaryDocument);

@@ -30,7 +30,7 @@ public class UserController {
         return userService.loginUser(email, password);
     }
 
-    @GetMapping("/users")
+    @GetMapping("/")
     public Iterable<User> getUsers() {
         return userService.getUsers();
     }
