@@ -15,7 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.civislocaltrack.backend.Execption.FileException;
 import com.civislocaltrack.backend.model.BudgetaryDocument;
 import com.civislocaltrack.backend.model.BudgetaryDocument.CategoryDocument;
 import com.civislocaltrack.backend.repository.BudgetaryDocumentRepository;
@@ -52,46 +55,52 @@ public class BudgetaryDocumentService {
     //         throw new RuntimeException("Impossible de créer le dossier de stockage", e);
     //     }
     // }
-
-    // public BudgetaryDocument uploadBudgetaryDocument(BudgetaryDocument budgetaryDocument) {
-    //     return budgetaryDocumentRepository.save(budgetaryDocument);
+    // private void initStorageDirectory() {
+    //     try {
+    //         Files.createDirectories(rootLocation);
+    //     } catch (IOException e) {
+    //         throw new RuntimeException("Impossible de créer le dossier de stockage", e);
+    //     }
     // }
+
+    // // public BudgetaryDocument uploadBudgetaryDocument(BudgetaryDocument budgetaryDocument) {
+    // //     return budgetaryDocumentRepository.save(budgetaryDocument);
+    // // }
 
     @Transactional
     public BudgetaryDocument uploadBudgetaryDocument(BudgetaryDocument budgetaryDocument, MultipartFile fichier, CategoryDocument categoryDocument)
-        throws IOException {
-            // === 1. Validation du fichier ===
-            if (fichier == null || fichier.isEmpty()) {
-                throw new IllegalArgumentException("Le fichier est requis.");
-            }
+            throws IOException {
 
-            // Liste des types MIME autorisés (PDF, Excel, CSV)
-            List<String> mimeTypesAutorises = Arrays.asList(
+        // === 1. Validation du fichier ===
+        if (fichier == null || fichier.isEmpty()) {
+            throw new FileException("Le fichier est requis.", FileException.FileErrorCode.EMPTY_FILE);
+        }
+
+        // Liste des types MIME autorisés (PDF, Excel, CSV)
+        List<String> mimeTypesAutorises = Arrays.asList(
                 "application/pdf",
                 "application/vnd.ms-excel",          // XLS
                 "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", // XLSX
                 "text/csv",
                 "text/plain"                         // CSV (peut être rapporté comme text/plain)
-            );
+        );
 
-            // Vérification du type MIME
-            String contentType = fichier.getContentType();
-            if (contentType == null || !mimeTypesAutorises.contains(contentType)) {
-                throw new IllegalArgumentException(
-                    "Seuls les fichiers PDF, XLS/XLSX et CSV sont acceptés. Type reçu : " + contentType
-                );
-            }
+        // Vérification du type MIME
+        String contentType = fichier.getContentType();
+        if (contentType == null || !mimeTypesAutorises.contains(contentType)) {
+            throw new FileException("Seuls les fichiers PDF, XLS/XLSX et CSV sont acceptés. Type reçu : " + contentType, FileException.FileErrorCode.CONTENT_FILE_NOT_AUTHORIZED); 
+        }
 
-            // Vérification de l'extension pour double sécurité
-            String nomOriginal = fichier.getOriginalFilename();
-            String extension = nomOriginal.substring(nomOriginal.lastIndexOf(".") + 1).toLowerCase();
-            List<String> extensionsAutorisees = Arrays.asList("pdf", "xls", "xlsx", "csv");
-            if (!extensionsAutorisees.contains(extension)) {
-                throw new IllegalArgumentException("Extension de fichier non autorisée : " + extension);
-            }
+        // Vérification de l'extension pour double sécurité
+        String nomOriginal = fichier.getOriginalFilename();
+        String extension = nomOriginal.substring(nomOriginal.lastIndexOf(".") + 1).toLowerCase();
+        List<String> extensionsAutorisees = Arrays.asList("pdf", "xls", "xlsx", "csv");
+        if (!extensionsAutorisees.contains(extension)) {
+            throw new FileException("Extension de fichier non autorisée : " + extension, FileException.FileErrorCode.INVALID_FORMAT);
+        }
 
-            // === 2. Génération d'un nom de fichier unique ===
-            String nomUnique = UUID.randomUUID() + "." + extension; // Ex: "a3b8f2e1.xlsx"
+        // === 2. Génération d'un nom de fichier unique ===
+        String nomUnique = UUID.randomUUID() + "." + extension; // Ex: "a3b8f2e1.xlsx"
 
             // === 3. Sauvegarde sécurisée du fichier ===
             // if (!Files.exists(rootLocation)) {
@@ -138,10 +147,7 @@ public class BudgetaryDocumentService {
             budgetaryDocument.setSize(fichier.getSize());
             budgetaryDocument.setUploadDate(LocalDateTime.now());
 
-            // === 5. Sauvegarde en base ===
-            return budgetaryDocumentRepository.save(budgetaryDocument);
-        }
-
-
-    
+        // === 5. Sauvegarde en base ===
+        return budgetaryDocumentRepository.save(budgetaryDocument);
+    }    
 }
