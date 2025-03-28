@@ -95,6 +95,7 @@ public class BudgetaryDocumentService {
 
             // === 4. Mise à jour des métadonnées ===
             budgetaryDocument.setIntitule(nomUnique);
+            budgetaryDocument.setOriginalName(nomOriginal);
             budgetaryDocument.setUrl(cheminFichier.toString());
             budgetaryDocument.setType(contentType); // Stocke le type MIME
             budgetaryDocument.setCategoryDocument(categoryDocument);

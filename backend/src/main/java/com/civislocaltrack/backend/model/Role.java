@@ -2,6 +2,8 @@ package com.civislocaltrack.backend.model;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -27,5 +29,6 @@ public class Role {
     private String libelleRole;
 
     @OneToMany(mappedBy = "role", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<User> users;
 }

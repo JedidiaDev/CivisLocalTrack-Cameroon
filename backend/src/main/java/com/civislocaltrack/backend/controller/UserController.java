@@ -2,8 +2,13 @@ package com.civislocaltrack.backend.controller;
 
 import com.civislocaltrack.backend.model.User;
 import com.civislocaltrack.backend.service.UserService;
+
+import jakarta.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 
 @RestController
 @RequestMapping("/api/users")
@@ -13,19 +18,16 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/register")
-    public User registerUser(@RequestBody User user) {
-        return userService.registerUser(user);
+    // public User registerUser(@RequestBody User user) {
+    //     return userService.registerUser(user);
+    // }
+    public ResponseEntity<?> registerUser(@Valid @RequestBody User user) {
+        return ResponseEntity.ok(userService.registerUser(user));
     }
 
     @GetMapping("/login")
-    public String loginUser(@RequestParam String email, @RequestParam String password) {
-        // return userService.loginUser(email, password);
-        User user = userService.loginUser(email, password);
-        if (user != null) {
-            return "Connexion réussie !";
-        } else {
-            return "Email ou mot de passe incorrect.";
-        }
+    public User loginUser(@RequestParam String email, @RequestParam String password) {
+        return userService.loginUser(email, password);
     }
 
     @GetMapping("/users")
@@ -33,17 +35,17 @@ public class UserController {
         return userService.getUsers();
     }
 
-    @GetMapping("/users/{id}")
+    @GetMapping("/{id}")
     public User getUser(@PathVariable Long id) {
         return userService.getUser(id);
     }
 
-    @PutMapping("/users/{id}")
+    @PutMapping("/{id}")
     public User updateUser(@PathVariable Long id, @RequestBody User user) {
         return userService.updateUser(id, user);
     }
 
-    @DeleteMapping("/users/{id}")
+    @DeleteMapping("/{id}")
     public void deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
     }

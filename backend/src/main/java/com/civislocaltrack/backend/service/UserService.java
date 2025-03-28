@@ -5,6 +5,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.civislocaltrack.backend.model.User;
+import com.civislocaltrack.backend.model.Role;
+import com.civislocaltrack.backend.repository.RoleRepository;
 import com.civislocaltrack.backend.repository.UserRepository;
 
 @Service
@@ -14,10 +16,22 @@ public class UserService {
     private UserRepository userRepository;
 
     @Autowired
+    private RoleRepository roleRepository;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
+
 
     public User registerUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        Role role = roleRepository.findByLibelleRole("CITOYEN")
+                .orElseGet(() -> {
+                    Role newRole = new Role();
+                    newRole.setLibelleRole("CITOYEN");
+                    return roleRepository.save(newRole);
+                });
+
+        user.setRole(role);        
         return userRepository.save(user);
     }
 
@@ -34,7 +48,7 @@ public class UserService {
     }
 
     public User getUser(Long id) {
-        return userRepository.findById(id).orElse(null);
+        return userRepository.findById(id).orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
     }
 
     public User updateUser(Long id, User user) {

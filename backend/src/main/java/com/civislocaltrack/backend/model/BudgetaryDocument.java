@@ -21,6 +21,9 @@ public class BudgetaryDocument {
     @Column(name = "intitule_document")
     protected String intitule;
 
+    @Column(name = "original_name")
+    protected String originalName; 
+
     @Column(name = "url")
     protected String url;
 
@@ -36,7 +39,7 @@ public class BudgetaryDocument {
     @Column(name = "size_document")
     protected Long size;
 
-    @Column(name = "category_document", insertable = false, updatable = false)
+    @Column(name = "category_document_value")
     @Enumerated(EnumType.STRING)
     private CategoryDocument categoryDocument;
 
