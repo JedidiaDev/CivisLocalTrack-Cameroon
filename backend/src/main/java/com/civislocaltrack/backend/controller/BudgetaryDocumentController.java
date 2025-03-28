@@ -1,13 +1,17 @@
 package com.civislocaltrack.backend.controller;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Locale.Category;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,8 +22,11 @@ import com.civislocaltrack.backend.model.AdminAccount;
 import com.civislocaltrack.backend.model.Budget;
 import com.civislocaltrack.backend.model.BudgetaryDocument;
 import com.civislocaltrack.backend.model.ManagementAccount;
+import com.civislocaltrack.backend.repository.BudgetaryDocumentRepository;
 import com.civislocaltrack.backend.model.BudgetaryDocument.CategoryDocument;
 import com.civislocaltrack.backend.service.BudgetaryDocumentService;
+
+import io.minio.GetObjectArgs;
 
 @RestController
 // @RequestMapping("/api/budgetary-documents")
@@ -86,6 +93,36 @@ public class BudgetaryDocumentController {
     //         budgetaryDocument = new BudgetaryDocument();
     //     }
     //     return ResponseEntity.ok(budgetaryDocumentService.uploadBudgetaryDocument(budgetaryDocument, fichier, categoryDocument));
+    // }
+
+    // @GetMapping("/download/{originalFileName}")
+    // public ResponseEntity<byte[]> downloadFile(@PathVariable String originalFileName) {
+    //     try {
+    //         // Rechercher le document par son nom original
+    //         BudgetaryDocument document = BudgetaryDocumentRepository.findByOriginalName(originalFileName)
+    //             .orElseThrow(() -> new FileNotFoundException("Fichier non trouvé : " + originalFileName));
+
+    //         // Récupérer le fichier depuis MinIO en utilisant le nom unique
+    //         InputStream inputStream = minioClient.getObject(
+    //             GetObjectArgs.builder()
+    //                 .bucket(bucketName)
+    //                 .object(document.getUniqueName())
+    //                 .build()
+    //         );
+
+    //         byte[] content = inputStream.readAllBytes();
+
+    //         // Construire la réponse HTTP
+    //         HttpHeaders headers = new HttpHeaders();
+    //         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+    //         headers.setContentDispositionFormData("attachment", originalFileName);
+
+    //         return ResponseEntity.ok()
+    //             .headers(headers)
+    //             .body(content);
+    //     } catch (Exception e) {
+    //         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    //     }
     // }
     
 }
