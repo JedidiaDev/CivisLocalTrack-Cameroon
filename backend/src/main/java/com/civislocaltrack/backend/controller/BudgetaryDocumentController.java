@@ -1,6 +1,7 @@
 package com.civislocaltrack.backend.controller;
 
 import java.io.IOException;
+import java.util.Locale.Category;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,8 +22,8 @@ import com.civislocaltrack.backend.model.BudgetaryDocument.CategoryDocument;
 import com.civislocaltrack.backend.service.BudgetaryDocumentService;
 
 @RestController
-@RequestMapping("/api/budgetary-documents")
-// @RequestMapping("/api/documents")
+// @RequestMapping("/api/budgetary-documents")
+@RequestMapping("/api/documents")
 public class BudgetaryDocumentController {
 
     @Autowired
@@ -31,9 +32,17 @@ public class BudgetaryDocumentController {
     @PostMapping("/upload")
     public ResponseEntity<BudgetaryDocument> uploadBudgetaryDocument(
             @RequestParam("fichier") MultipartFile fichier,
-            @RequestParam("categoryDocument") CategoryDocument categoryDocument,
-            @ModelAttribute BudgetaryDocument budgetaryDocument // Récupère les autres champs du formulaire
-    ) {
+            @RequestParam("categoryDocument") String categoryDocumentName
+            // @ModelAttribute BudgetaryDocument budgetaryDocument // Récupère les autres champs du formulaire
+    ) throws IOException {
+        // Convertir la chaîne de caractères en enum
+        CategoryDocument categoryDocument;
+        try {
+            categoryDocument = CategoryDocument.valueOf(categoryDocumentName.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Catégorie de document invalide : " + categoryDocumentName);
+        }
+        BudgetaryDocument budgetaryDocument = new BudgetaryDocument();
         try {
             BudgetaryDocument uploadedDocument = budgetaryDocumentService.uploadBudgetaryDocument(budgetaryDocument, fichier, categoryDocument);
             return new ResponseEntity<>(uploadedDocument, HttpStatus.CREATED);
